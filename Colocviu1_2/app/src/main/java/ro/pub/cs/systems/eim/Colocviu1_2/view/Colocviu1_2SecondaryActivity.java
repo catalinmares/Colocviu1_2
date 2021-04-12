@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+
+import java.util.Arrays;
 
 import ro.pub.cs.systems.eim.Colocviu1_2.general.Constants;
 
@@ -21,7 +24,7 @@ public class Colocviu1_2SecondaryActivity extends AppCompatActivity {
             allTerms = intent.getStringExtra(Constants.ALL_TERMS);
 
             if (allTerms != null) {
-                String[] terms = allTerms.split(" + ");
+                String[] terms = allTerms.split(" \\+ ");
 
                 int result = 0;
 
