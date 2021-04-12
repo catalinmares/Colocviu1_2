@@ -137,7 +137,13 @@ public class Colocviu1_2MainActivity extends AppCompatActivity {
             sum = data.getIntExtra(Constants.ADD_RESULT, 0);
             Toast.makeText(this, "Computed sum is " + sum, Toast.LENGTH_LONG).show();
 
-            if (sum > 10 && serviceStatus == Constants.SERVICE_STOPPED) {
+            if (sum > 10) {
+                if (serviceStatus == Constants.SERVICE_STARTED) {
+                    Intent intent = new Intent(Colocviu1_2MainActivity.this, Colocviu1_2Service.class);
+                    stopService(intent);
+                    serviceStatus = Constants.SERVICE_STOPPED;
+                }
+
                 Intent serviceIntent = new Intent(Colocviu1_2MainActivity.this, Colocviu1_2Service.class);
                 serviceIntent.putExtra(Constants.SUM, sum);
                 startService(serviceIntent);
