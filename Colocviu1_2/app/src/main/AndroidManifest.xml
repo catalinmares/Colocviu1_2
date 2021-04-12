@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.Colocviu1_2SecondaryActivity"></activity>
+
         <activity android:name=".view.Colocviu1_2MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,6 +17,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".view.Colocviu1_2SecondaryActivity"/>
+
+        <service android:name=".service.Colocviu1_2Service"
+            android:enabled="true"
+            android:exported="false"/>
     </application>
 
 </manifest>

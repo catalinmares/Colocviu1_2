@@ -5,7 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 
 import ro.pub.cs.systems.eim.Colocviu1_2.R;
 import ro.pub.cs.systems.eim.Colocviu1_2.general.Constants;
+import ro.pub.cs.systems.eim.Colocviu1_2.service.Colocviu1_2Service;
 
 public class Colocviu1_2MainActivity extends AppCompatActivity {
     private EditText nextTermEditText;
@@ -26,6 +30,9 @@ public class Colocviu1_2MainActivity extends AppCompatActivity {
 
     private int sum;
     private boolean isModified = false;
+    private int serviceStatus = Constants.SERVICE_STOPPED;
+
+    private IntentFilter intentFilter;
 
     private ButtonClickListener buttonClickListener = new ButtonClickListener();
     private class ButtonClickListener implements Button.OnClickListener {
@@ -64,6 +71,15 @@ public class Colocviu1_2MainActivity extends AppCompatActivity {
         }
     }
 
+    private MessageBroadcastReceiver messageBroadcastReceiver = new MessageBroadcastReceiver();
+    private class MessageBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, intent.getStringExtra(Constants.BROADCAST_EXTRA), Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +103,30 @@ public class Colocviu1_2MainActivity extends AppCompatActivity {
         }
 
         Log.d(Constants.MAIN_ACTIVITY_TAG, "Sum is " + sum);
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.BROADCAST_ACTION);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        registerReceiver(messageBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(messageBroadcastReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Intent serviceIntent = new Intent(Colocviu1_2MainActivity.this, Colocviu1_2Service.class);
+        stopService(serviceIntent);
+        serviceStatus = Constants.SERVICE_STOPPED;
+        super.onDestroy();
     }
 
     @Override
@@ -96,6 +136,13 @@ public class Colocviu1_2MainActivity extends AppCompatActivity {
         if (requestCode == Constants.SECONDARY_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             sum = data.getIntExtra(Constants.ADD_RESULT, 0);
             Toast.makeText(this, "Computed sum is " + sum, Toast.LENGTH_LONG).show();
+
+            if (sum > 10 && serviceStatus == Constants.SERVICE_STOPPED) {
+                Intent serviceIntent = new Intent(Colocviu1_2MainActivity.this, Colocviu1_2Service.class);
+                serviceIntent.putExtra(Constants.SUM, sum);
+                startService(serviceIntent);
+                serviceStatus = Constants.SERVICE_STARTED;
+            }
         }
     }
 

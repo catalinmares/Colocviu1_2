@@ -7,4 +7,10 @@ public interface Constants {
     String MAIN_ACTIVITY_TAG = "[Main Activity]";
     String SECONDARY_ACTIVITY_TAG = "[Secondary Activity]";
     String SUM = "Sum";
+    int SLEEP_TIME = 2000;
+    String BROADCAST_ACTION = "ro.pub.cs.systems.eim.Colocviu1_2.BroadcastAction";
+    String BROADCAST_EXTRA = "ro.pub.cs.systems.eim.Colocviu1_2.BroadcastExtra";
+    String PROCESSING_THREAD_TAG = "[Processing Thread]";
+    int SERVICE_STOPPED = 0;
+    int SERVICE_STARTED = 1;
 }
